@@ -1,16 +1,20 @@
 #include <CodeReviewComment.h>
 
-#include <Comment.h>
 #include <AvatarHelper.h>
-#include <previewpage.h>
+#include <Comment.h>
 #include <GitQlientSettings.h>
 
-#include <QVBoxLayout>
-#include <QTextEdit>
 #include <QLabel>
 #include <QLocale>
-#include <QWebEngineView>
+#include <QTextEdit>
+#include <QVBoxLayout>
+
+/*
 #include <QWebChannel>
+#include <QWebEngineView>
+#include <previewpage.h>
+*/
+#include <md4c-html.h>
 
 CodeReviewComment::CodeReviewComment(const GitServer::CodeReview &review, QWidget *parent)
    : QFrame(parent)
@@ -32,6 +36,7 @@ CodeReviewComment::CodeReviewComment(const GitServer::CodeReview &review, QWidge
    const auto colorSchema = settings.globalValue("colorSchema", "dark").toString();
    const auto style = colorSchema == "dark" ? QString::fromUtf8("dark") : QString::fromUtf8("bright");
 
+   /*
    QPointer<QWebEngineView> body = new QWebEngineView();
    PreviewPage *page = new PreviewPage(this);
    body->setPage(page);
@@ -47,6 +52,22 @@ CodeReviewComment::CodeReviewComment(const GitServer::CodeReview &review, QWidge
       if (body)
          body->setFixedHeight(size.height());
    });
+   */
+
+   QTextDocument *html = new QTextDocument();
+
+   md_html(
+       review.body.toUtf8(), review.body.size(),
+       [](const char *data, MD_SIZE, void *userdata) {
+          const auto html = static_cast<QTextDocument *>(userdata);
+          auto currentText = html->toHtml();
+          currentText.append(QString::fromUtf8(data));
+          html->setHtml(currentText);
+       },
+       html, 0, 0);
+
+   QTextEdit *body = new QTextEdit();
+   body->setDocument(html);
 
    m_content.setText(review.body);
 

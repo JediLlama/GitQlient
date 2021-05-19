@@ -11,14 +11,16 @@
 #include <Milestone.h>
 #include <PullRequest.h>
 
-#include <previewpage.h>
-
 #include <QFile>
 #include <QMessageBox>
 #include <QStandardItemModel>
 #include <QTimer>
-#include <QWebChannel>
 
+/*
+#include <QWebChannel>
+#include <previewpage.h>
+*/
+#include <md4c-html.h>
 using namespace GitServer;
 
 CreatePullRequestDlg::CreatePullRequestDlg(const QSharedPointer<GitCache> &cache,
@@ -76,6 +78,7 @@ bool CreatePullRequestDlg::configure(const QString &workingDir, const QString &c
       const auto colorSchema = settings.globalValue("colorSchema", "dark").toString();
       const auto style = colorSchema == "dark" ? QString::fromUtf8("dark") : QString::fromUtf8("bright");
 
+      /*
       PreviewPage *page = new PreviewPage(this);
       ui->preview->setPage(page);
       ui->teDescription->setText(QString::fromUtf8(fileContent));
@@ -85,6 +88,20 @@ bool CreatePullRequestDlg::configure(const QString &workingDir, const QString &c
       page->setWebChannel(channel);
 
       ui->preview->setUrl(QUrl(QString("qrc:/resources/index_%1.html").arg(style)));
+      */
+
+      QTextDocument *html = new QTextDocument();
+
+      md_html(
+          fileContent, fileContent.size(),
+          [](const char *data, MD_SIZE, void *userdata) {
+             const auto html = static_cast<QTextDocument *>(userdata);
+             html->setHtml(QString::fromUtf8(data));
+          },
+          html, 0, 0);
+
+      QTextEdit *body = new QTextEdit();
+      body->setDocument(html);
    }
 
    return true;

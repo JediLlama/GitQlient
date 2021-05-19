@@ -1,3 +1,4 @@
+
 INCLUDEPATH += $$PWD
 
 FORMS += \
@@ -26,8 +27,7 @@ HEADERS += \
    $$PWD/PrList.h \
    $$PWD/ServerConfigDlg.h \ \
    $$PWD/SourceCodeReview.h \
-   $$PWD/document.h \
-   $$PWD/previewpage.h
+   $$PWD/document.h
 
 SOURCES += \
    $$PWD/AddCodeReviewDialog.cpp \
@@ -47,5 +47,4 @@ SOURCES += \
    $$PWD/PrList.cpp \
    $$PWD/ServerConfigDlg.cpp \
    $$PWD/SourceCodeReview.cpp \
-   $$PWD/document.cpp \
-   $$PWD/previewpage.cpp
+   $$PWD/document.cpp

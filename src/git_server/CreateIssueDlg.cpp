@@ -6,14 +6,17 @@
 #include <GitServerCache.h>
 #include <Issue.h>
 
-#include <previewpage.h>
-
-#include <QMessageBox>
-#include <QStandardItemModel>
-#include <QStandardItem>
-#include <QFile>
-#include <QWebChannel>
 #include <QDirIterator>
+#include <QFile>
+#include <QMessageBox>
+#include <QStandardItem>
+#include <QStandardItemModel>
+
+/*
+#include <QWebChannel>
+#include <previewpage.h>
+*/
+#include <md4c-html.h>
 
 using namespace GitServer;
 
@@ -86,6 +89,7 @@ bool CreateIssueDlg::configure(const QString &workingDir)
       const auto colorSchema = settings.globalValue("colorSchema", "dark").toString();
       const auto style = colorSchema == "dark" ? QString::fromUtf8("dark") : QString::fromUtf8("bright");
 
+      /*
       PreviewPage *page = new PreviewPage(this);
       ui->preview->setPage(page);
 
@@ -99,6 +103,22 @@ bool CreateIssueDlg::configure(const QString &workingDir)
       page->setWebChannel(channel);
 
       ui->preview->setUrl(QUrl(QString("qrc:/resources/index_%1.html").arg(style)));
+      */
+
+      QTextDocument *html = new QTextDocument();
+
+      md_html(
+          fileContent, fileContent.size(),
+          [](const char *data, MD_SIZE, void *userdata) {
+             const auto html = static_cast<QTextDocument *>(userdata);
+             auto currentText = html->toHtml();
+             currentText.append(QString::fromUtf8(data));
+             html->setHtml(currentText);
+          },
+          html, 0, 0);
+
+      QTextEdit *body = new QTextEdit();
+      body->setDocument(html);
    }
 
    return true;
@@ -234,6 +254,7 @@ void CreateIssueDlg::updateMarkdown(const QByteArray &fileContent)
    const auto colorSchema = settings.globalValue("colorSchema", "dark").toString();
    const auto style = colorSchema == "dark" ? QString::fromUtf8("dark") : QString::fromUtf8("bright");
 
+   /*
    PreviewPage *page = new PreviewPage(this);
    ui->preview->setPage(page);
    ui->teDescription->setText(QString::fromUtf8(fileContent));
@@ -243,4 +264,20 @@ void CreateIssueDlg::updateMarkdown(const QByteArray &fileContent)
    page->setWebChannel(channel);
 
    ui->preview->setUrl(QUrl(QString("qrc:/resources/index_%1.html").arg(style)));
+   */
+
+   QTextDocument *html = new QTextDocument();
+
+   md_html(
+       fileContent, fileContent.size(),
+       [](const char *data, MD_SIZE, void *userdata) {
+          const auto html = static_cast<QTextDocument *>(userdata);
+          auto currentText = html->toHtml();
+          currentText.append(QString::fromUtf8(data));
+          html->setHtml(currentText);
+       },
+       html, 0, 0);
+
+   QTextEdit *body = new QTextEdit();
+   body->setDocument(html);
 }

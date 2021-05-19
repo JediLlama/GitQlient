@@ -1,33 +1,37 @@
 #include "PrCommentsList.h"
 
-#include <GitServerCache.h>
+#include <AvatarHelper.h>
+#include <ButtonLink.hpp>
+#include <CircularPixmap.h>
+#include <CodeReviewComment.h>
+#include <Colors.h>
 #include <GitHubRestApi.h>
 #include <GitLabRestApi.h>
-#include <CircularPixmap.h>
-#include <SourceCodeReview.h>
-#include <AvatarHelper.h>
-#include <CodeReviewComment.h>
-#include <ButtonLink.hpp>
-#include <Colors.h>
-#include <previewpage.h>
 #include <GitQlientSettings.h>
+#include <GitServerCache.h>
+#include <SourceCodeReview.h>
 
-#include <QNetworkAccessManager>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QScrollArea>
 #include <QDir>
 #include <QFile>
-#include <QStandardPaths>
-#include <QNetworkReply>
-#include <QTextEdit>
-#include <QPropertyAnimation>
-#include <QSequentialAnimationGroup>
-#include <QPushButton>
 #include <QIcon>
+#include <QLabel>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QPropertyAnimation>
+#include <QPushButton>
+#include <QScrollArea>
 #include <QScrollBar>
+#include <QSequentialAnimationGroup>
+#include <QStandardPaths>
+#include <QTextEdit>
+#include <QVBoxLayout>
+
+/*
 #include <QWebChannel>
 #include <QWebEngineView>
+#include <previewpage.h>
+*/
+#include <md4c-html.h>
 
 using namespace GitServer;
 
@@ -216,6 +220,7 @@ void PrCommentsList::loadData(PrCommentsList::Config config, int issueNumber)
    const auto colorSchema = settings.globalValue("colorSchema", "dark").toString();
    const auto style = colorSchema == "dark" ? QString::fromUtf8("dark") : QString::fromUtf8("bright");
 
+   /*
    QPointer<QWebEngineView> body = new QWebEngineView();
 
    PreviewPage *page = new PreviewPage(this);
@@ -232,6 +237,21 @@ void PrCommentsList::loadData(PrCommentsList::Config config, int issueNumber)
       if (body)
          body->setFixedHeight(size.height());
    });
+   */
+   QString text;
+
+   md_html(
+       issue.body, issue.body.size(),
+       [](const char *data, MD_SIZE, void *userdata) {
+          const auto html = static_cast<QString *>(userdata);
+          html->append(QString::fromUtf8(data));
+       },
+       &text, 0, 0);
+
+   QTextDocument *html = new QTextDocument();
+   html->setHtml(text.remove("\n").remove("\r"));
+   QTextEdit *body = new QTextEdit();
+   body->setDocument(html);
 
    m_content.setText(QString::fromUtf8(issue.body));
 
@@ -378,7 +398,7 @@ void PrCommentsList::onReviewsReceived()
 
    mIssuesLayout->addWidget(mCommentsFrame);
 }
-
+#include <QDebug>
 QLayout *PrCommentsList::createBubbleForComment(const Comment &comment)
 {
    const auto creationLayout = new QHBoxLayout();
@@ -401,6 +421,7 @@ QLayout *PrCommentsList::createBubbleForComment(const Comment &comment)
    const auto doc = new Document(this);
    m_commentContents.append(doc);
 
+   /*
    const auto channel = new QWebChannel(this);
    channel->registerObject(QStringLiteral("content"), doc);
 
@@ -417,6 +438,23 @@ QLayout *PrCommentsList::createBubbleForComment(const Comment &comment)
    body->setPage(page);
    body->setUrl(QUrl(QString("qrc:/resources/index_%1.html").arg(style)));
    body->setFixedHeight(20);
+    */
+
+   QTextDocument *html = new QTextDocument();
+
+   md_html(
+       comment.body.toUtf8(), comment.body.size(),
+       [](const char *data, MD_SIZE, void *userdata) {
+          const auto html = static_cast<QTextDocument *>(userdata);
+          auto currentText = html->toHtml();
+          qDebug() << QString::fromUtf8(data);
+          currentText.append(QString::fromUtf8(data));
+          html->setHtml(currentText);
+       },
+       html, 0, 0);
+
+   QTextEdit *body = new QTextEdit();
+   body->setDocument(html);
 
    doc->setText(comment.body.trimmed());
 

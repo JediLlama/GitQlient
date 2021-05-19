@@ -12,9 +12,15 @@ HEADERS += \
    $$PWD/Milestone.h \
    $$PWD/Platform.h \
    $$PWD/PullRequest.h \
-   $$PWD/User.h
+   $$PWD/User.h \
+   $$PWD/entity.h \
+   $$PWD/md4c-html.h \
+   $$PWD/md4c.h
 
 SOURCES += \
    $$PWD/GitHubRestApi.cpp \
    $$PWD/GitLabRestApi.cpp \
-   $$PWD/IRestApi.cpp
+   $$PWD/IRestApi.cpp \
+   $$PWD/entity.c \
+   $$PWD/md4c-html.c \
+   $$PWD/md4c.c
