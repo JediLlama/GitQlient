@@ -12,8 +12,6 @@ TagDlg::TagDlg(const QSharedPointer<GitBase> &git, const QString &sha, QWidget *
    , mGit(git)
    , mSha(sha)
 {
-   setStyleSheet(GitQlientStyles::getStyles());
-
    ui->setupUi(this);
 
    connect(ui->leTagName, &QLineEdit::returnPressed, this, &TagDlg::accept);

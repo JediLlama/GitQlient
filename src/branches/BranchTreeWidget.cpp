@@ -146,7 +146,6 @@ void BranchTreeWidget::checkoutBranch(QTreeWidgetItem *item)
                                   "description for more information."),
                                QMessageBox::Ok, this);
             msgBox.setDetailedText(output);
-            msgBox.setStyleSheet(GitQlientStyles::getStyles());
             msgBox.exec();
          }
       }

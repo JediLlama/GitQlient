@@ -50,7 +50,6 @@ void GitQlientUpdater::showInfoMessage()
        QMessageBox::Ok | QMessageBox::Close, qobject_cast<QWidget *>(parent()));
    msgBox.setButtonText(QMessageBox::Ok, tr("Download"));
    msgBox.setDetailedText(mChangeLog);
-   msgBox.setStyleSheet(GitQlientStyles::getStyles());
 
    if (msgBox.exec() == QMessageBox::Ok)
       downloadFile();

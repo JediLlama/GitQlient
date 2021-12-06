@@ -82,7 +82,6 @@ void BranchContextMenu::pull()
                                "description for more information."),
                             QMessageBox::Ok, this);
          msgBox.setDetailedText(errorMsg);
-         msgBox.setStyleSheet(GitQlientStyles::getStyles());
          msgBox.exec();
       }
    }
@@ -139,7 +138,6 @@ void BranchContextMenu::push()
                             "for more information."),
                          QMessageBox::Ok, this);
       msgBox.setDetailedText(ret.output);
-      msgBox.setStyleSheet(GitQlientStyles::getStyles());
       msgBox.exec();
    }
 }
@@ -163,7 +161,6 @@ void BranchContextMenu::pushForce()
                             "for more information."),
                          QMessageBox::Ok, this);
       msgBox.setDetailedText(ret.output);
-      msgBox.setStyleSheet(GitQlientStyles::getStyles());
       msgBox.exec();
    }
 }

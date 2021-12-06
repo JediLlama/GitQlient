@@ -153,7 +153,6 @@ void AmendWidget::commitChanges()
                                      "description for more information."),
                                   QMessageBox::Ok, this);
                msgBox.setDetailedText(ret.output);
-               msgBox.setStyleSheet(GitQlientStyles::getStyles());
                msgBox.exec();
             }
          }

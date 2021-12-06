@@ -50,8 +50,6 @@ ServerConfigDlg::ServerConfigDlg(const QSharedPointer<GitServerCache> &gitServer
    , mData(data)
    , mManager(new QNetworkAccessManager())
 {
-   setStyleSheet(GitQlientStyles::getStyles());
-
    ui->setupUi(this);
 
    connect(ui->cbServer, &QComboBox::currentTextChanged, this, &ServerConfigDlg::onServerChanged);

@@ -11,8 +11,6 @@ AddRemoteDlg::AddRemoteDlg(const QSharedPointer<GitBase> &git, QWidget *parent)
    , ui(new Ui::AddSubmoduleDlg)
    , mGit(git)
 {
-   setStyleSheet(GitQlientStyles::getStyles());
-
    ui->setupUi(this);
 
    setWindowTitle("Add remote repository");

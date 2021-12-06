@@ -363,7 +363,6 @@ void CommitHistoryContextMenu::checkoutCommit()
                             "description for more information."),
                          QMessageBox::Ok, this);
       msgBox.setDetailedText(ret.output);
-      msgBox.setStyleSheet(GitQlientStyles::getStyles());
       msgBox.exec();
    }
 }
@@ -412,7 +411,6 @@ void CommitHistoryContextMenu::cherryPickCommit()
                                   "description for more information."),
                                QMessageBox::Ok, this);
             msgBox.setDetailedText(errorMsg);
-            msgBox.setStyleSheet(GitQlientStyles::getStyles());
             msgBox.exec();
          }
       }
@@ -479,7 +477,6 @@ void CommitHistoryContextMenu::push()
                             "for more information."),
                          QMessageBox::Ok, this);
       msgBox.setDetailedText(ret.output);
-      msgBox.setStyleSheet(GitQlientStyles::getStyles());
       msgBox.exec();
    }
 }
@@ -509,7 +506,6 @@ void CommitHistoryContextMenu::pull()
                                "description for more information."),
                             QMessageBox::Ok, this);
          msgBox.setDetailedText(errorMsg);
-         msgBox.setStyleSheet(GitQlientStyles::getStyles());
          msgBox.exec();
       }
    }

@@ -41,7 +41,6 @@ void StashesContextMenu::drop()
                             "description for more information."),
                          QMessageBox::Ok, this);
       msgBox.setDetailedText(ret.output);
-      msgBox.setStyleSheet(GitQlientStyles::getStyles());
       msgBox.exec();
    }
 }
@@ -60,7 +59,6 @@ void StashesContextMenu::clear()
                             "description for more information."),
                          QMessageBox::Ok, this);
       msgBox.setDetailedText(ret.output);
-      msgBox.setStyleSheet(GitQlientStyles::getStyles());
       msgBox.exec();
    }
 }

@@ -18,8 +18,6 @@ BranchDlg::BranchDlg(BranchDlgConfig config, QWidget *parent)
    , ui(new Ui::BranchDlg)
    , mConfig(std::move(config))
 {
-   setStyleSheet(GitQlientStyles::getStyles());
-
    ui->setupUi(this);
    ui->leOldName->setText(mConfig.mCurrentBranchName);
 
@@ -192,7 +190,6 @@ void BranchDlg::accept()
                         "for more information.")),
              QMessageBox::Ok, this);
          msgBox.setDetailedText(ret.output);
-         msgBox.setStyleSheet(GitQlientStyles::getStyles());
          msgBox.exec();
       }
       else

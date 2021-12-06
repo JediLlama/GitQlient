@@ -92,8 +92,6 @@ GeneralConfigDlg::GeneralConfigDlg(QWidget *parent)
    layout->addLayout(buttonsLayout, ++row, 0, 1, 2);
 
    setFixedSize(500, 300);
-
-   setStyleSheet(GitQlientStyles::getStyles());
 }
 
 void GeneralConfigDlg::resetChanges()

@@ -33,8 +33,6 @@ InitScreen::InitScreen(QWidget *parent)
 {
    setAttribute(Qt::WA_DeleteOnClose);
 
-   setStyleSheet(GitQlientStyles::getStyles());
-
    mOpenRepo->setObjectName("bigButton");
    mCloneRepo->setObjectName("bigButton");
    mInitRepo->setObjectName("bigButton");

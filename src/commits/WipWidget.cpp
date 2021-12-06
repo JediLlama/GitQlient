@@ -54,9 +54,11 @@ void WipWidget::commitChanges()
    if (!selFiles.isEmpty())
    {
       if (hasConflicts())
+	  {
          QMessageBox::warning(this, tr("Impossible to commit"),
                               tr("There are files with conflicts. Please, resolve "
                                  "the conflicts first."));
+	  }
       else if (checkMsg(msg))
       {
          const auto revInfo = mCache->commitInfo(CommitInfo::ZERO_SHA);
@@ -124,7 +126,6 @@ void WipWidget::commitChanges()
                                      "description for more information."),
                                   QMessageBox::Ok, this);
                msgBox.setDetailedText(ret.output);
-               msgBox.setStyleSheet(GitQlientStyles::getStyles());
                msgBox.exec();
             }
 

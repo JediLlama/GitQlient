@@ -46,8 +46,6 @@ GitQlient::GitQlient(QWidget *parent)
    QLog_Info("UI", QString("*                  %1                  *").arg(VER));
    QLog_Info("UI", "*******************************************");
 
-   setStyleSheet(GitQlientStyles::getStyles());
-
    const auto homeMenu = new QPushButton();
    const auto menu = new QMenu(homeMenu);
 

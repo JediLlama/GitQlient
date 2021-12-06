@@ -15,8 +15,6 @@ WaitingDlg::WaitingDlg(const QString &labelText)
    setAttribute(Qt::WA_DeleteOnClose);
    setWindowModality(Qt::ApplicationModal);
    setWindowFlags(Qt::FramelessWindowHint);
-
-   setStyleSheet(GitQlientStyles::getStyles());
 }
 
 void WaitingDlg::keyPressEvent(QKeyEvent *e)

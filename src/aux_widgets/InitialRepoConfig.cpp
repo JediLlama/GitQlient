@@ -18,8 +18,6 @@ InitialRepoConfig::InitialRepoConfig(const QSharedPointer<GitBase> &git,
 
    ui->setupUi(this);
 
-   setStyleSheet(GitQlientStyles::getInstance()->getStyles());
-
    ui->autoFetch->setValue(mSettings->localValue("AutoFetch", 5).toInt());
    ui->pruneOnFetch->setChecked(settings->localValue("PruneOnFetch", true).toBool());
    ui->updateOnPull->setChecked(settings->localValue("UpdateOnPull", false).toBool());

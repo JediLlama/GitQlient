@@ -12,9 +12,6 @@ AddCodeReviewDialog::AddCodeReviewDialog(ReviewMode mode, QWidget *parent)
 {
    ui->setupUi(this);
 
-   if (!parent)
-      setStyleSheet(GitQlientStyles::getInstance()->getStyles());
-
    switch (mode)
    {
       case ReviewMode::Comment:

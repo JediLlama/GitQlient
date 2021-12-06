@@ -262,7 +262,6 @@ void Controls::pullCurrentBranch()
                                        "description for more information.")),
                             QMessageBox::Ok, this);
          msgBox.setDetailedText(ret.output);
-         msgBox.setStyleSheet(GitQlientStyles::getStyles());
          msgBox.exec();
       }
    }
@@ -354,7 +353,6 @@ void Controls::pushCurrentBranch()
                      "for more information.")),
           QMessageBox::Ok, this);
       msgBox.setDetailedText(ret.output);
-      msgBox.setStyleSheet(GitQlientStyles::getStyles());
       msgBox.exec();
    }
 }

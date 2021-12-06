@@ -252,7 +252,6 @@ void MergeWidget::abort()
                             "description for more information."),
                          QMessageBox::Ok, this);
       msgBox.setDetailedText(ret.output);
-      msgBox.setStyleSheet(GitQlientStyles::getStyles());
       msgBox.exec();
    }
    else
@@ -329,7 +328,6 @@ void MergeWidget::commit()
                                "for more information."),
                             QMessageBox::Ok, this);
          msgBox.setDetailedText(ret.output);
-         msgBox.setStyleSheet(GitQlientStyles::getStyles());
          msgBox.exec();
       }
       else
@@ -410,7 +408,6 @@ void MergeWidget::cherryPickCommit()
                                   "description for more information."),
                                QMessageBox::Ok, this);
             msgBox.setDetailedText(errorMsg);
-            msgBox.setStyleSheet(GitQlientStyles::getStyles());
             msgBox.exec();
 
             mPendingShas.clear();
