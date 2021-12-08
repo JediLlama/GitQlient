@@ -280,8 +280,10 @@ void HistoryWidget::loadBranches(bool fullReload)
       mBranchesWidget->refreshCurrentBranchLink();
 }
 
+#include <QDebug>
 void HistoryWidget::updateUiFromWatcher()
 {
+   qDebug() << sender();
    if (const auto widget = dynamic_cast<CommitChangesWidget *>(mCommitStackedWidget->currentWidget()))
       widget->reload();
 
@@ -379,12 +381,6 @@ void HistoryWidget::onCommitTitleMaxLenghtChanged()
 void HistoryWidget::onPanelsVisibilityChanged()
 {
    mBranchesWidget->onPanelsVisibilityChaned();
-}
-
-void HistoryWidget::onDiffFontSizeChanged()
-{
-   mFullDiffWidget->changeFontSize();
-   mFileDiff->changeFontSize();
 }
 
 void HistoryWidget::search()
@@ -578,34 +574,18 @@ void HistoryWidget::cherryPickCommit()
                                   "description for more information."),
                                QMessageBox::Ok, this);
             msgBox.setDetailedText(ret.output);
-            msgBox.setStyleSheet(GitQlientStyles::getStyles());
             msgBox.exec();
          }
       }
    }
    else
    {
-      const auto lastShaBeforeCommit = mGit->getLastCommit().output.trimmed();
       const auto git = QScopedPointer<GitLocal>(new GitLocal(mGit));
       const auto ret = git->cherryPickCommit(mSearchInput->text());
 
       if (ret.success)
       {
          mSearchInput->clear();
-
-         commit.sha = mGit->getLastCommit().output.trimmed();
-
-         mCache->insertCommit(commit);
-         mCache->deleteReference(lastShaBeforeCommit, References::Type::LocalBranch, mGit->getCurrentBranch());
-         mCache->insertReference(commit.sha, References::Type::LocalBranch, mGit->getCurrentBranch());
-
-         QScopedPointer<GitHistory> gitHistory(new GitHistory(mGit));
-         const auto ret = gitHistory->getDiffFiles(commit.sha, lastShaBeforeCommit);
-
-         mCache->insertRevisionFiles(commit.sha, lastShaBeforeCommit, RevisionFiles(ret.output));
-
-         emit mCache->signalCacheUpdated();
-
          emit logReload();
       }
    }

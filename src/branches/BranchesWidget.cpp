@@ -25,6 +25,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QScopedPointer>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -50,14 +51,6 @@ QTreeWidgetItem *getChild(QTreeWidgetItem *parent, const QString &childName)
 
    return child;
 }
-
-struct RemoteBranch
-{
-   QString remote;
-   QString branch;
-   QString sha;
-};
-
 }
 
 BranchesWidget::BranchesWidget(const QSharedPointer<GitCache> &cache, const QSharedPointer<GitBase> &git,
@@ -606,7 +599,17 @@ void BranchesWidget::processLocalBranch(const QString &sha, QString branch)
    parents.clear();
    parents.squeeze();
 
-   mLocalBranchesTree->addTopLevelItem(item);
+   bool inserted = false;
+
+   for (int row = 0; row < mLocalBranchesTree->topLevelItemCount(); ++row)
+      if (mLocalBranchesTree->topLevelItem(row)->text(0) > item->text(0)) {
+         mLocalBranchesTree->insertTopLevelItem(row, item);
+         inserted = true;
+         break;
+      }
+
+   if (!inserted)
+      mLocalBranchesTree->addTopLevelItem(item);
 
    QLog_Debug("UI", QString("Finish gathering local branch information"));
 }
@@ -887,8 +890,8 @@ void BranchesWidget::showTagsContextMenu(const QPoint &p)
    if (!tagName.isEmpty())
    {
       const auto isRemote = item->data(0, LocalBranchRole).toBool();
-      const auto menu = new QMenu(this);
-      const auto removeTagAction = menu->addAction(tr("Remove tag"));
+	  QScopedPointer<QMenu> menu(new QMenu(this));
+	  const auto removeTagAction = menu->addAction(tr("Remove tag"));
       connect(removeTagAction, &QAction::triggered, this, [this, tagName, isRemote]() {
          QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
          QScopedPointer<GitTags> git(new GitTags(mGit));
@@ -923,10 +926,10 @@ void BranchesWidget::showStashesContextMenu(const QPoint &p)
 
    if (index.isValid())
    {
-      const auto menu = new StashesContextMenu(mGit, index.data(Qt::UserRole).toString(), this);
-      connect(menu, &StashesContextMenu::signalUpdateView, this, &BranchesWidget::fullReload);
-      connect(menu, &StashesContextMenu::signalContentRemoved, this, &BranchesWidget::fullReload);
-      menu->exec(mStashesList->viewport()->mapToGlobal(p));
+	  QScopedPointer<StashesContextMenu> menu(new StashesContextMenu(mGit, index.data(Qt::UserRole).toString(), this));
+	  connect(menu.data(), &StashesContextMenu::signalUpdateView, this, &BranchesWidget::fullReload);
+	  connect(menu.data(), &StashesContextMenu::signalContentRemoved, this, &BranchesWidget::fullReload);
+	  menu->exec(mStashesList->viewport()->mapToGlobal(p));
    }
 }
 
@@ -934,9 +937,9 @@ void BranchesWidget::showSubmodulesContextMenu(const QPoint &p)
 {
    QLog_Info("UI", QString("Requesting context menu for submodules"));
 
-   const auto menu = new SubmodulesContextMenu(mGit, mSubmodulesList->indexAt(p), this);
-   connect(menu, &SubmodulesContextMenu::openSubmodule, this, &BranchesWidget::signalOpenSubmodule);
-   connect(menu, &SubmodulesContextMenu::infoUpdated, this, &BranchesWidget::fullReload);
+   QScopedPointer<SubmodulesContextMenu> menu(new SubmodulesContextMenu(mGit, mSubmodulesList->indexAt(p), this));
+   connect(menu.data(), &SubmodulesContextMenu::openSubmodule, this, &BranchesWidget::signalOpenSubmodule);
+   connect(menu.data(), &SubmodulesContextMenu::infoUpdated, this, &BranchesWidget::fullReload);
 
    menu->exec(mSubmodulesList->viewport()->mapToGlobal(p));
 }
@@ -947,7 +950,7 @@ void BranchesWidget::showSubtreesContextMenu(const QPoint &p)
 
    QModelIndex index = mSubtreeList->indexAt(p);
 
-   const auto menu = new QMenu(this);
+   QScopedPointer<QMenu> menu(new QMenu(this));
 
    if (index.isValid())
    {

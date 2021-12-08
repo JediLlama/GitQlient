@@ -146,36 +146,38 @@ void AGitProcess::onReadyStandardOutput()
    }
 }
 
-bool AGitProcess::execute(const QString &command)
+bool AGitProcess::execute(const QString &command, const QStringList &commandArguments)
 {
-   mCommand = command;
+	mCommand = command;
 
-   auto processStarted = false;
-   auto arguments = splitArgList(mCommand);
+	auto processStarted = false;
+	QStringList arguments = commandArguments;
 
-   if (!arguments.isEmpty())
-   {
-      QStringList env = QProcess::systemEnvironment();
-      env << "GIT_TRACE=0"; // avoid choking on debug traces
-      env << "GIT_FLUSH=0"; // skip the fflush() in 'git log'
-      env << loginApp();
+	if (arguments.isEmpty())
+		arguments = splitArgList(mCommand);
+	else
+		arguments.prepend(command);
 
-      const auto gitAlternative = GitQlientSettings().globalValue("gitLocation", "").toString();
+	QStringList env = QProcess::systemEnvironment();
+	env << "GIT_TRACE=0"; // avoid choking on debug traces
+	env << "GIT_FLUSH=0"; // skip the fflush() in 'git log'
+	env << loginApp();
 
-      setEnvironment(env);
-      setProgram(gitAlternative.isEmpty() ? arguments.takeFirst() : gitAlternative);
-      setArguments(arguments);
-      start();
+	const auto gitAlternative = GitQlientSettings().globalValue("gitLocation", "").toString();
 
-      processStarted = waitForStarted();
+	setEnvironment(env);
+	setProgram(gitAlternative.isEmpty() ? arguments.takeFirst() : gitAlternative);
+	setArguments(arguments);
+	start();
 
-      if (!processStarted)
-         QLog_Warning("Git", QString("Unable to start the process:\n%1\nMore info:\n%2").arg(mCommand, errorString()));
-      else
-         QLog_Debug("Git", QString("Process started: %1").arg(mCommand));
-   }
+	processStarted = waitForStarted();
 
-   return processStarted;
+	if (!processStarted)
+		QLog_Warning("Git", QString("Unable to start the process:\n%1\nMore info:\n%2").arg(mCommand, errorString()));
+	else
+		QLog_Debug("Git", QString("Process started: %1").arg(mCommand + commandArguments.join(" ")));
+
+	return processStarted;
 }
 
 void AGitProcess::onFinished(int exitCode, QProcess::ExitStatus exitStatus)

@@ -35,17 +35,14 @@ QVector<QString> GitStashes::getStashes()
    return stashes;
 }
 
-GitExecResult GitStashes::pop() const
+GitExecResult GitStashes::pop(const QString &stashId) const
 {
    QLog_Debug("Git", QString("Popping the stash"));
 
-   const auto cmd = QString("git stash pop");
+   if (stashId.isEmpty())
+	   return mGitBase->run("git", {"stash", "pop"});
 
-   QLog_Trace("Git", QString("Popping the stash: {%1}").arg(cmd));
-
-   const auto ret = mGitBase->run(cmd);
-
-   return ret;
+   return mGitBase->run("git", {"stash", "pop", stashId});
 }
 
 GitExecResult GitStashes::stash()
