@@ -150,19 +150,22 @@ QMenu::separator
    background: #3f4043;
 }
 
-QSpinBox
+QSpinBox,
+QDoubleSpinBox
 {
     color: black;
     border-color: #D89000;
     background: transparent;
 }
 
-QSpinBox::up-button:hover, QSpinBox::down-button:hover
+QSpinBox::up-button:hover, QSpinBox::down-button:hover.
+QDoubleSpinBox::up-button:hover, QDoubleSpinBox::down-button:hover
 {
     background: #606162;
 }
 
-QSpinBox::up-button, QSpinBox::down-button
+QSpinBox::up-button, QSpinBox::down-button,
+QDoubleSpinBox::up-button, QDoubleSpinBox::down-button
 {
     border-color: #D89000;
 }
@@ -224,16 +227,10 @@ QMessageBox
     color: black;
 }
 
-QTreeView > QWidget
-{
-    background: #C6C6C7;
-}
-
 QScrollBar:vertical
 {
-    border-left-color: transparent;
-    background: #FFFFFF;
-    border-top-color: #2E2F30;
+    border-left-color: #202122;
+    background: transparent;
 }
 
 QScrollBar:horizontal
@@ -260,7 +257,7 @@ QScrollBar::handle:vertical:pressed, QScrollBar::handle:horizontal:pressed
 
 QScrollBar::add-page, QScrollBar::sub-page
 {
-    background: #FFFFFF;
+    background: #E6E6E7;
 }
 
 QProgressDialog

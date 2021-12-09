@@ -165,19 +165,22 @@ QMenu::separator
    background: #3f4043;
 }
 
-QSpinBox
+QSpinBox,
+QDoubleSpinBox
 {
     color: white;
     border-color: #D89000;
     background-color: transparent;
 }
 
-QSpinBox::up-button:hover, QSpinBox::down-button:hover
+QSpinBox::up-button:hover, QSpinBox::down-button:hover,
+QDoubleSpinBox::up-button:hover, QDoubleSpinBox::down-button:hover
 {
     background: #606162;
 }
 
-QSpinBox::up-button, QSpinBox::down-button
+QSpinBox::up-button, QSpinBox::down-button,
+QDoubleSpinBox::up-button, QDoubleSpinBox::down-button
 {
     border-color: #D89000;
 }
@@ -194,10 +197,6 @@ QComboBox:disabled {
    color: #E0E0E1;
 }
 
-QComboBox:editable {
-   background: #ffffff;
-}
-
 QComboBox:on {
    background-color: #2E2F30;
 }
@@ -206,6 +205,12 @@ QComboBox QAbstractItemView
 {
    outline: none;
    border-color: #D89000;
+   selection-background-color: #404142;
+}
+
+QComboBox::drop-down
+{
+   background: #404142;
 }
 
 QComboBox::drop-down:hover
@@ -238,20 +243,20 @@ QMessageBox
 
 QScrollBar:vertical
 {
+    border-left-color: #202122;
     background-color: transparent;
-    border-top-color: #606162;
 }
 
 QScrollBar:horizontal
 {
-    border-top-color: transparent;
+    border-top-color: #202122;
     background-color: transparent;
 }
 
 QScrollBar::handle:vertical, QScrollBar::handle:horizontal
 {
     border-color: #202122;
-    background-color: #202122;
+    background-color: #2E2F30;
 }
 
 QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover
@@ -261,17 +266,17 @@ QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover
 
 QScrollBar::handle:vertical:pressed, QScrollBar::handle:horizontal:pressed
 {
-    background-color: #505152;
+    background-color: #303132;
 }
 
 QScrollBar::add-page, QScrollBar::sub-page
 {
-    background-color: #2E2F30;
+    background-color: #606162;
 }
 
 QProgressDialog
 {
-    background-color: #2E2F30;
+    background-color: #404142;
     color: white;
 }
 
