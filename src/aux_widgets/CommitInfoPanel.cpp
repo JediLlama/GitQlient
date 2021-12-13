@@ -2,6 +2,7 @@
 
 #include <ButtonLink.hpp>
 #include <CommitInfo.h>
+#include <GravatarImage.h>
 
 #include <QApplication>
 #include <QClipboard>
@@ -12,11 +13,12 @@
 
 CommitInfoPanel::CommitInfoPanel(QWidget *parent)
    : QFrame(parent)
-   , mLabelSha(new ButtonLink())
-   , mLabelTitle(new QLabel())
-   , mLabelDescription(new QLabel())
-   , mLabelAuthor(new QLabel())
-   , mLabelDateTime(new QLabel())
+   , mLabelSha(new ButtonLink)
+   , mLabelTitle(new QLabel)
+   , mLabelDescription(new QLabel)
+   , mLabelAuthor(new QLabel)
+   , mLabelDateTime(new QLabel)
+   , mAuthorAvatar(new GravatarImage)
 {
    mLabelSha->setObjectName("labelSha");
    mLabelSha->setAlignment(Qt::AlignCenter);
@@ -52,8 +54,18 @@ CommitInfoPanel::CommitInfoPanel(QWidget *parent)
    descriptionLayout->addWidget(mLabelTitle);
    descriptionLayout->addWidget(mScrollArea);
    descriptionLayout->addWidget(wipSeparator);
-   descriptionLayout->addWidget(mLabelAuthor);
-   descriptionLayout->addWidget(mLabelDateTime);
+
+   auto authorLayout = new QVBoxLayout;
+   mLabelAuthor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+   authorLayout->addWidget(mLabelAuthor);
+   mLabelDateTime->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+   authorLayout->addWidget(mLabelDateTime);
+
+   auto authorImageLayout = new QHBoxLayout;
+   authorImageLayout->addLayout(authorLayout);
+   authorImageLayout->addWidget(mAuthorAvatar);
+
+   descriptionLayout->addLayout(authorImageLayout);
 
    connect(mLabelSha, &ButtonLink::clicked, this, [this]() {
       const auto button = qobject_cast<ButtonLink *>(sender());
@@ -68,9 +80,10 @@ void CommitInfoPanel::configure(const CommitInfo &commit)
    mLabelSha->setData(commit.sha);
    mLabelSha->setToolTip("Click to save");
 
-   const auto authorName = commit.committer.split("<").first();
+   const auto authorName = commit.committerName(); // committer.split("<").first();
    mLabelTitle->setText(commit.shortLog);
    mLabelAuthor->setText(authorName);
+   mAuthorAvatar->setEmailAddress(commit.committerEmail());
 
    QDateTime commitDate = QDateTime::fromSecsSinceEpoch(commit.dateSinceEpoch.count());
    mLabelDateTime->setText(commitDate.toString("dd/MM/yyyy hh:mm"));

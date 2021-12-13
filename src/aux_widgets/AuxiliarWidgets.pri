@@ -20,6 +20,7 @@ HEADERS += \
     $$PWD/CreateRepoDlg.h \
     $$PWD/CredentialsDlg.h \
     $$PWD/GitQlientUpdater.h \
+    $$PWD/GravatarImage.h \
     $$PWD/Highlighter.h \
     $$PWD/InitialRepoConfig.h \
     $$PWD/PomodoroButton.h \
@@ -39,6 +40,7 @@ SOURCES += \
     $$PWD/CreateRepoDlg.cpp \
     $$PWD/CredentialsDlg.cpp \
     $$PWD/GitQlientUpdater.cpp \
+    $$PWD/GravatarImage.cpp \
     $$PWD/Highlighter.cpp \
     $$PWD/InitialRepoConfig.cpp \
     $$PWD/PomodoroButton.cpp \
