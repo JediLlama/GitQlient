@@ -159,6 +159,11 @@ QColor CommitChangesWidget::getColorForFile(const RevisionFiles &files, int inde
 
 void CommitChangesWidget::deleteUntrackedFiles()
 {
+   if (QMessageBox::question(nullptr, tr("Delete untracked files"), tr("Are you certain you want to delete all untracked files?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::No)
+      return;
+
+   QDir gitDir(mGit->getWorkingDir());
+
    for (auto i = 0; i < ui->unstagedFilesList->count(); ++i)
    {
       const auto item = ui->unstagedFilesList->item(i);

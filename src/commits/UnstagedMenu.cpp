@@ -140,6 +140,9 @@ bool UnstagedMenu::addEntryToGitIgnore(const QString &entry)
 
 void UnstagedMenu::onDeleteFile()
 {
+   if (QMessageBox::question(nullptr, tr("Delete file"), tr("Are you certain you want to delete '%1'?").arg(mFileName), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::No)
+      return;
+
    const auto path = QString("%1").arg(mFileName);
 
    QLog_Info("UI", "Removing path: " + path);
