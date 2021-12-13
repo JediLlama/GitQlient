@@ -174,11 +174,8 @@ void CommitChangesWidget::deleteUntrackedFiles()
 
          QLog_Info("UI", "Removing path: " + path);
 
-         QProcess p;
-         p.setWorkingDirectory(mGit->getWorkingDir());
-         p.start("rm", { "-rf", path });
-
-         p.waitForFinished();
+         if (!QFile::remove(gitDir.absoluteFilePath(path)))
+            QMessageBox::warning(nullptr, tr("Delete untracked files"), tr("Could not remove %1.").arg(path));
       }
    }
 

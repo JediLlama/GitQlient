@@ -147,10 +147,10 @@ void UnstagedMenu::onDeleteFile()
 
    QLog_Info("UI", "Removing path: " + path);
 
-   QProcess p;
-   p.setWorkingDirectory(mGit->getWorkingDir());
-   p.start("rm", { "-rf", path });
+   QDir gitDir(mGit->getWorkingDir());
 
-   if (p.waitForFinished())
+   if (!QFile::remove(gitDir.absoluteFilePath(mFileName)))
+      QMessageBox::warning(nullptr, tr("Delete file"), tr("Could not remove %1.").arg(mFileName));
+   else
       emit signalCheckedOut();
 }
