@@ -33,6 +33,7 @@ class GitConfig;
 class QStackedLayout;
 class GitQlientSettings;
 class GitBase;
+class GitQlientRepo;
 
 /*!
  \brief The GitQlient class is the MainWindow of the GitQlient application. Is the widget that stores all the tabs about
@@ -91,6 +92,7 @@ public:
 
 protected:
    bool eventFilter(QObject *obj, QEvent *event) override;
+   bool event(QEvent* event) override;
 
 private:
    QStackedLayout *mStackedLayout = nullptr;
@@ -122,6 +124,11 @@ private:
    */
    void initRepo();
 
+   /*!
+    * \brief Force a reload of all open repositories.
+    */
+   void reloadRepos();
+
    /**
     * @brief Updates the progress dialog for cloning repos.
     *
@@ -152,6 +159,14 @@ private:
    \param repoPath The full path of the repository to be opened.
            */
    void addNewRepoTab(const QString &repoPath, bool pinned);
+
+   /*!
+    * \brief Returns the repository widget managed by the tab widget at index \p tabIndex.
+    * \param tabIndex The index of the repository tab to retrieve.
+    * \return A pointer to a GitQlientRepo repositoryor nullptr if \p tabIndex is out of range or is not a GitQlientRepo widget.
+    */
+   GitQlientRepo* repoAt(int tabIndex);
+
    /*!
     \brief Closes a tab. This implies to close all child widgets and remove cache and configuration for that repository
     until it's opened again.

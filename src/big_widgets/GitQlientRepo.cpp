@@ -60,7 +60,11 @@ GitQlientRepo::GitQlientRepo(const QSharedPointer<GitBase> &git, const QSharedPo
    , mJenkins(new JenkinsWidget(mGitBase->getGitDir()))
    , mConfigWidget(new ConfigWidget(mGitBase))
    , mAutoFetch(new QTimer())
+<<<<<<< HEAD
    , mAutoFilesUpdate(new QTimer())
+=======
+   , mGitTags(new GitTags(mGitBase, mGitQlientCache))
+>>>>>>> Reload the repositories with application focus
 {
    setAttribute(Qt::WA_DeleteOnClose);
 
@@ -105,10 +109,8 @@ GitQlientRepo::GitQlientRepo(const QSharedPointer<GitBase> &git, const QSharedPo
    const auto fetchInterval = mSettings->localValue("AutoFetch", 5).toInt();
 
    mAutoFetch->setInterval(fetchInterval * 60 * 1000);
-   mAutoFilesUpdate->setInterval(15000);
 
    connect(mAutoFetch, &QTimer::timeout, mControls, &Controls::fetchAll);
-   connect(mAutoFilesUpdate, &QTimer::timeout, this, &GitQlientRepo::updateUiFromWatcher);
 
    connect(mControls, &Controls::requestFullReload, this, &GitQlientRepo::fullReload);
    connect(mControls, &Controls::requestReferencesReload, this, &GitQlientRepo::referencesReload);
@@ -186,7 +188,6 @@ GitQlientRepo::GitQlientRepo(const QSharedPointer<GitBase> &git, const QSharedPo
 GitQlientRepo::~GitQlientRepo()
 {
    delete mAutoFetch;
-   delete mAutoFilesUpdate;
 
    m_loaderThread->exit();
    m_loaderThread->wait();
@@ -285,8 +286,6 @@ void GitQlientRepo::onRepoLoadFinished(bool fullReload)
       mBlameWidget->init(mCurrentDir);
 
       mControls->enableButtons(true);
-
-      mAutoFilesUpdate->start();
 
       QScopedPointer<GitConfig> git(new GitConfig(mGitBase));
 

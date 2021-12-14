@@ -115,6 +115,12 @@ GitQlient::GitQlient(QWidget *parent)
    if (!geometry.isNull())
       restoreGeometry(geometry);
 
+
+   connect(qApp, &QGuiApplication::applicationStateChanged, this, [&](Qt::ApplicationState state)
+   {
+      if (state == Qt::ApplicationActive)
+         reloadRepos();
+   });
    const auto gitBase(QSharedPointer<GitBase>::create(""));
    mGit = QSharedPointer<GitConfig>::create(gitBase);
 
@@ -446,6 +452,42 @@ void GitQlient::updateWindowTitle()
       if (const auto repoPath = currentTab->currentDir(); !repoPath.isEmpty())
       {
          const auto currentName = repoPath.split("/").last();
+
+GitQlientRepo* GitQlient::repoAt(int tabIndex)
+{
+   if (Q_UNLIKELY(tabIndex < 0 || tabIndex >= mRepos->count()))
+      return nullptr;
+
+   return dynamic_cast<GitQlientRepo*>(mRepos->widget(tabIndex));
+}
+
+#include <QDebug>
+
+void GitQlient::reloadRepos()
+{
+   qInfo() << "Reloading repositories";
+
+   for (int tab = 0; tab < mRepos->count(); ++tab) {
+      auto repo = repoAt(tab);
+
+      if (repo)
+         repo->fullReload();
+   }
+}
+
+bool GitQlient::event(QEvent* event)
+{
+   if (event->type() == QEvent::WindowStateChange) {
+      qDebug() << "Window state:" << windowState();
+      if (windowState().testFlag(Qt::WindowActive)) {
+         qDebug() << "Window has become active";
+         reloadRepos();
+         return true;
+      }
+   }
+
+   return QWidget::event(event);
+}
          const auto currentBranch = currentTab->currentBranch();
 
          setWindowTitle(QString("GitQlient %1 - %2 (%3)").arg(VER, currentName, currentBranch));
